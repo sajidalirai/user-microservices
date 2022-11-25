@@ -1,6 +1,7 @@
 const User = require("./../model/userModel");
 const bcrypt = require("bcrypt");
 const catchAsync = require("./../utils/catchAsync");
+const AppError = require("./../utils/appError");
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
@@ -30,6 +31,10 @@ exports.createUser = catchAsync(async (req, res, next) => {
 });
 exports.getUserById = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
+  if (!user) {
+    return next(new AppError(`No user exist against id ${req.params.id}`, 404));
+  }
+
   res.status(200).json({
     status: "success",
     data: {
@@ -41,6 +46,9 @@ exports.updateUserById = catchAsync(async (req, res, next) => {
   const user = await User.findOneAndReplace(req.params.id, req.body, {
     new: true,
   });
+  if (!user) {
+    return next(new AppError(`No user exist against id ${req.params.id}`, 404));
+  }
   res.status(200).json({
     status: "success",
     data: {
@@ -53,6 +61,9 @@ exports.updatePartialUser = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
+  if (!user) {
+    return next(new AppError(`No user exist against id ${req.params.id}`, 404));
+  }
   res.status(200).json({
     status: "success",
     data: {
@@ -63,6 +74,9 @@ exports.updatePartialUser = catchAsync(async (req, res, next) => {
 
 exports.deleteUserById = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndDelete(req.params.id);
+  if (!user) {
+    return next(new AppError(`No user exist against id ${req.params.id}`, 404));
+  }
   res.status(200).json({
     status: "success",
     message: `user with name: ${user.username} deleted successfully`,
