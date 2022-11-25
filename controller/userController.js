@@ -59,6 +59,25 @@ exports.getUserById = async (req, res) => {
 };
 exports.updateUserById = async (req, res) => {
   try {
+    const user = await User.findOneAndReplace(req.params.id, req.body, {
+      new: true,
+    });
+    res.status(200).json({
+      status: "success",
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "failed",
+      message: error,
+    });
+  }
+};
+
+exports.updatePartialUser = async (req, res) => {
+  try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
@@ -75,6 +94,7 @@ exports.updateUserById = async (req, res) => {
     });
   }
 };
+
 exports.deleteUserById = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
