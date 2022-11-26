@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
+  value: {
+    type: Number,
+    required: [true, "value is required"],
+  },
   permissionLevel: {
     type: String,
     required: [true, "permissionLevel is required"],
@@ -9,6 +13,7 @@ const userSchema = new mongoose.Schema({
   firstName: {
     type: String,
     required: [true, "firstName is required"],
+    minLength: 5,
   },
   lastName: {
     type: String,
